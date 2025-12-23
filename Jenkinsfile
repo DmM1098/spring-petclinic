@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    
+
     stages {
         stage('Checkout') {
             steps {
@@ -23,8 +23,8 @@ pipeline {
 
         stage('Report') {
             steps {
-                echo "Build and tests passed on branch: ${env.BRANCH_NAME}"
-                echo "Build: ${env.BUILD_NUMBER} | Job: ${env.JOB_NAME}"
+                echo "Branch: ${env.BRANCH_NAME}"
+                echo "Build successful!"
             }
         }
     }
@@ -34,7 +34,7 @@ pipeline {
             junit 'target/surefire-reports/*.xml'
         }
         failure {
-            echo "Pipeline failed on branch ${env.BRANCH_NAME}"
+            echo "Build failed on branch ${env.BRANCH_NAME}"
         }
     }
 }
