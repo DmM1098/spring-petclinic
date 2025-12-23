@@ -1,0 +1,44 @@
+pipeline {
+    agent any
+
+    tools {
+        jdk 'jdk17'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build and Test') {
+            steps {
+                sh './mvnw clean verify -B'
+            }
+        }
+
+        stage('Package') {
+            steps {
+                sh './mvnw package -DskipTests -B'
+                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+            }
+        }
+
+        stage('Report') {
+            steps {
+                echo "Build and tests passed on branch: ${env.BRANCH_NAME}"
+                echo "Build: ${env.BUILD_NUMBER} | Job: ${env.JOB_NAME}"
+            }
+        }
+    }
+
+    post {
+        always {
+            junit 'target/surefire-reports/*.xml'
+        }
+        failure {
+            echo "Pipeline failed on branch ${env.BRANCH_NAME}"
+        }
+    }
+}
