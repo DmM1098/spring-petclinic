@@ -10,13 +10,13 @@ pipeline {
 
         stage('Build and Test') {
             steps {
-                sh './mvnw clean verify -B'
+                bat '.\\mvnw clean verify -B'
             }
         }
 
         stage('Package') {
             steps {
-                sh './mvnw package -DskipTests -B'
+                bat '.\\mvnw package -DskipTests -B'
                 archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             }
         }
